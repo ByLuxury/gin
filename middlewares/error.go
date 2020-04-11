@@ -9,9 +9,11 @@ import (
 func ErrorHandler(ctx *gin.Context) {
 	defer func() {
 		if err := recover(); err != nil {
-			ctx.JSON(http.StatusInternalServerError, err)
-		}
+			if ctx.Writer.Status() != http.StatusOK {
+				ctx.Status(http.StatusOK)
+			}
+				ctx.JSON(http.StatusOK, err)
+ 		}
 	}()
-
 	ctx.Next()
 }
